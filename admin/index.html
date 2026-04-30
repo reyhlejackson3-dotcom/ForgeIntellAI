@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForgeIntellAI — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --forge-black: #0a0a0a;
+    --forge-white: #f5f2ee;
+    --forge-orange: #e8520a;
+    --forge-gray: #141414;
+    --forge-card: #1a1a1a;
+    --forge-mid: #2a2a2a;
+    --forge-border: #2e2e2e;
+    --forge-muted: #666;
+    --forge-green: #22c55e;
+    --forge-red: #ef4444;
+  }
+  body {
+    background: var(--forge-black);
+    color: var(--forge-white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--forge-border);
+    position: sticky; top: 0;
+    background: var(--forge-black);
+    z-index: 10;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--forge-orange); }
+  .admin-badge {
+    background: var(--forge-mid);
+    color: var(--forge-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.75rem;
+    margin-bottom: 0.25rem;
+  }
+  .page-sub { color: var(--forge-muted); font-size: 0.875rem; margin-bottom: 2rem; }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .stat {
+    background: var(--forge-card);
+    border: 1px solid var(--forge-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--forge-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.5rem; }
+  .stat-val { font-family: 'Syne', sans-serif; font-size: 1.75rem; font-weight: 700; }
+  .stat-val.orange { color: var(--forge-orange); }
+  .stat-val.green { color: var(--forge-green); }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--forge-border);
+  }
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+  .client-card {
+    background: var(--forge-card);
+    border: 1px solid var(--forge-border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .client-card.active { border-color: #22c55e30; }
+  .client-card.paused { border-color: #ef444430; }
+  .client-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+  .client-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
+  .client-type { font-size: 0.75rem; color: var(--forge-muted); margin-top: 2px; }
+  .status-badge {
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .status-badge.active { background: #22c55e18; color: var(--forge-green); border: 1px solid #22c55e30; }
+  .status-badge.paused { background: #ef444418; color: var(--forge-red); border: 1px solid #ef444430; }
+  .client-details { margin-bottom: 1.25rem; }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.825rem;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--forge-border);
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: var(--forge-muted); }
+  .detail-val { color: var(--forge-white); font-weight: 500; }
+  .client-actions { display: flex; gap: 0.75rem; }
+  .btn {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.825rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--forge-border);
+    background: var(--forge-mid);
+    color: var(--forge-white);
+    transition: all 0.15s;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn:hover { background: #3a3a3a; }
+  .btn-toggle-on { background: #22c55e15; border-color: #22c55e40; color: var(--forge-green); }
+  .btn-toggle-on:hover { background: #22c55e25; }
+  .btn-toggle-off { background: #ef444415; border-color: #ef444440; color: var(--forge-red); }
+  .btn-toggle-off:hover { background: #ef444425; }
+  .add-client-card {
+    background: transparent;
+    border: 1px dashed var(--forge-border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 220px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    color: var(--forge-muted);
+  }
+  .add-client-card:hover { border-color: var(--forge-orange); color: var(--forge-orange); }
+  .add-icon { font-size: 2rem; }
+  .add-label { font-size: 0.875rem; font-weight: 500; }
+  .revenue-row { display: flex; align-items: center; justify-content: space-between; background: var(--forge-card); border: 1px solid var(--forge-border); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .revenue-info { display: flex; flex-direction: column; gap: 2px; }
+  .revenue-name { font-weight: 500; font-size: 0.9rem; }
+  .revenue-type { font-size: 0.75rem; color: var(--forge-muted); }
+  .revenue-amount { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--forge-green); }
+  .total-bar { background: var(--forge-orange); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+  .total-label { font-weight: 500; font-size: 0.9rem; color: #fff; }
+  .total-amount { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: #fff; }
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--forge-card);
+    border: 1px solid var(--forge-border);
+    border-radius: 10px;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.875rem;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 100;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Forge<span>Intell</span>AI</div>
+  <span class="admin-badge">Admin</span>
+</header>
+<main>
+  <h1 class="page-title">Client Dashboard</h1>
+  <p class="page-sub">Manage access, view revenue, and control every client account from here.</p>
+
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-label">Total clients</div>
+      <div class="stat-val" id="total-clients">1</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Active</div>
+      <div class="stat-val green" id="active-count">1</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Paused</div>
+      <div class="stat-val" style="color:var(--forge-red)" id="paused-count">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Monthly revenue</div>
+      <div class="stat-val orange" id="monthly-rev">$300</div>
+    </div>
+  </div>
+
+  <div class="section-title">Clients</div>
+  <div class="clients-grid" id="clients-grid">
+
+    <div class="client-card active" id="card-apex">
+      <div class="client-header">
+        <div>
+          <div class="client-name">Apex Roofing</div>
+          <div class="client-type">Estimate engine</div>
+        </div>
+        <span class="status-badge active" id="badge-apex">Active</span>
+      </div>
+      <div class="client-details">
+        <div class="detail-row"><span class="detail-label">Monthly retainer</span><span class="detail-val">$300</span></div>
+        <div class="detail-row"><span class="detail-label">Setup fee paid</span><span class="detail-val">$600</span></div>
+        <div class="detail-row"><span class="detail-label">Client since</span><span class="detail-val">Demo</span></div>
+        <div class="detail-row"><span class="detail-label">Next payment</span><span class="detail-val">—</span></div>
+      </div>
+      <div class="client-actions">
+        <a class="btn" href="../client/apex-roofing/estimate.html" target="_blank">View site</a>
+        <button class="btn btn-toggle-off" id="toggle-apex" onclick="toggleClient('apex')">Pause access</button>
+      </div>
+    </div>
+
+    <div class="add-client-card" onclick="alert('To add a new client, come back to ForgeIntellAI and tell us the business name, industry, and which system they need. We\'ll build their room and give you the files!')">
+      <div class="add-icon">+</div>
+      <div class="add-label">Add new client</div>
+      <div style="font-size:0.75rem; text-align:center; max-width: 180px; line-height:1.5;">Come back to ForgeIntellAI to build a new client room</div>
+    </div>
+
+  </div>
+
+  <div class="section-title">Revenue breakdown</div>
+  <div id="revenue-list">
+    <div class="revenue-row">
+      <div class="revenue-info">
+        <div class="revenue-name">Apex Roofing</div>
+        <div class="revenue-type">Estimate engine · Active</div>
+      </div>
+      <div class="revenue-amount">$300/mo</div>
+    </div>
+  </div>
+  <div class="total-bar">
+    <div class="total-label">Total monthly recurring</div>
+    <div class="total-amount" id="total-amount">$300/mo</div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const clients = {
+  apex: { active: true, retainer: 300 }
+};
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function toggleClient(id) {
+  clients[id].active = !clients[id].active;
+  const isActive = clients[id].active;
+  const card = document.getElementById('card-' + id);
+  const badge = document.getElementById('badge-' + id);
+  const btn = document.getElementById('toggle-' + id);
+  card.className = 'client-card ' + (isActive ? 'active' : 'paused');
+  badge.className = 'status-badge ' + (isActive ? 'active' : 'paused');
+  badge.textContent = isActive ? 'Active' : 'Paused';
+  btn.className = 'btn ' + (isActive ? 'btn-toggle-off' : 'btn-toggle-on');
+  btn.textContent = isActive ? 'Pause access' : 'Restore access';
+  updateStats();
+  showToast(isActive ? 'Apex Roofing restored — system is live.' : 'Apex Roofing paused — their system is offline.');
+}
+
+function updateStats() {
+  const all = Object.values(clients);
+  const active = all.filter(c => c.active);
+  const rev = active.reduce((sum, c) => sum + c.retainer, 0);
+  document.getElementById('total-clients').textContent = all.length;
+  document.getElementById('active-count').textContent = active.length;
+  document.getElementById('paused-count').textContent = all.length - active.length;
+  document.getElementById('monthly-rev').textContent = '$' + rev.toLocaleString();
+  document.getElementById('total-amount').textContent = '$' + rev.toLocaleString() + '/mo';
+}
+</script>
+</body>
+</html>

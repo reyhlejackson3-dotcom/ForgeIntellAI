@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForgeIntellAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --forge-black: #0a0a0a;
+    --forge-white: #f5f2ee;
+    --forge-orange: #e8520a;
+    --forge-orange-dim: #c44208;
+    --forge-gray: #1a1a1a;
+    --forge-mid: #2e2e2e;
+    --forge-muted: #666;
+  }
+  body {
+    background: var(--forge-black);
+    color: var(--forge-white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.25rem;
+  }
+  .logo span { color: var(--forge-orange); }
+  .tagline {
+    font-size: 0.95rem;
+    color: var(--forge-muted);
+    margin-bottom: 3.5rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 680px;
+  }
+  .card {
+    background: var(--forge-gray);
+    border: 1px solid var(--forge-mid);
+    border-radius: 16px;
+    padding: 2rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s;
+    display: block;
+  }
+  .card:hover { border-color: var(--forge-orange); transform: translateY(-2px); }
+  .card-eyebrow {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--forge-orange);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  .card-desc { font-size: 0.875rem; color: var(--forge-muted); line-height: 1.6; }
+  .noise {
+    position: fixed; inset: 0; pointer-events: none; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="logo">Forge<span>Intell</span>AI</div>
+<p class="tagline">Business automation platform</p>
+<div class="cards">
+  <a class="card" href="admin/index.html">
+    <div class="card-eyebrow">Internal</div>
+    <div class="card-title">Admin Dashboard</div>
+    <div class="card-desc">Manage clients, toggle access, view all accounts on your platform.</div>
+  </a>
+  <a class="card" href="client/apex-roofing/estimate.html">
+    <div class="card-eyebrow">Demo Client</div>
+    <div class="card-title">Apex Roofing</div>
+    <div class="card-desc">Customer-facing estimate engine demo — show this to prospects.</div>
+  </a>
+</div>
+</body>
+</html>
