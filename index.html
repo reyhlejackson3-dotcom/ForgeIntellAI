@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForgeIntellAI Hub — Enter Room Key</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --orange:#e8520a;--orange-hot:#ff6520;--orange-glow:rgba(232,82,10,0.12);
+  --black:#050505;--dark:#0a0a0a;--card:#131313;--border:#1f1f1f;--border2:#2a2a2a;
+  --white:#f0ede8;--muted:#6e6a65;--grey:#b8b4ae;--green:#22c55e;--red:#ef4444;
+  --mono:'DM Mono',monospace;--display:'Bebas Neue',sans-serif;--body:'Barlow',sans-serif;
+}
+body{background:var(--black);color:var(--white);font-family:var(--body);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden;}
+
+/* Gear bg */
+.bg-gear{position:fixed;bottom:-180px;right:-180px;width:600px;height:600px;opacity:0.04;pointer-events:none;animation:spin 40s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.bg-gear2{position:fixed;top:-100px;left:-100px;width:350px;height:350px;opacity:0.03;pointer-events:none;animation:spin 28s linear infinite reverse;}
+
+/* Grid lines */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;opacity:0.03;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;}
+
+.hub-logo{display:flex;flex-direction:column;align-items:center;margin-bottom:2.5rem;}
+.hub-logo img{height:70px;width:auto;filter:drop-shadow(0 0 20px rgba(232,82,10,0.3));margin-bottom:1rem;}
+.hub-name{font-family:var(--display);font-size:2.5rem;letter-spacing:0.08em;color:var(--white);}
+.hub-sub{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;margin-top:4px;}
+
+.login-box{background:var(--card);border:1px solid var(--border);width:100%;max-width:420px;padding:2.5rem;}
+.login-title{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;}
+.login-title::before{content:'';display:block;width:16px;height:1px;background:var(--orange);}
+
+.key-input-wrap{position:relative;margin-bottom:1rem;}
+.key-input{width:100%;background:var(--dark);border:1px solid var(--border2);color:var(--white);font-family:var(--mono);font-size:0.95rem;letter-spacing:0.08em;padding:1rem 3rem 1rem 1rem;outline:none;transition:border-color .2s;}
+.key-input:focus{border-color:var(--orange);}
+.key-input::placeholder{color:var(--muted);letter-spacing:0.05em;}
+.key-toggle{position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0;}
+.key-toggle:hover{color:var(--white);}
+
+.enter-btn{width:100%;background:var(--orange);color:var(--black);border:none;padding:1rem;font-family:var(--mono);font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background .2s;font-weight:500;}
+.enter-btn:hover{background:var(--orange-hot);}
+
+.error-msg{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.06em;color:var(--red);margin-top:0.75rem;display:none;text-align:center;}
+.error-msg.show{display:block;}
+
+.hint{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;color:var(--muted);text-align:center;margin-top:1.25rem;line-height:1.6;}
+
+/* Noise */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;opacity:0.018;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+</style>
+</head>
+<body>
+
+<svg class="bg-gear" viewBox="0 0 200 200"><path fill="#b8b4ae" d="M100 60a40 40 0 1 0 0 80 40 40 0 0 0 0-80zm0 16a24 24 0 1 1 0 48 24 24 0 0 1 0-24zM92 10h16v24H92zm0 156h16v24H92zM10 92v16h24V92zm156 0v16h24V92zM34.3 24.5l11.3 11.3-17 17-11.3-11.3zm120 120l11.3 11.3-17 17-11.3-11.3zM24.5 165.7l17-17 11.3 11.3-17 17zm120-120l17-17 11.3 11.3-17 17z"/></svg>
+<svg class="bg-gear2" viewBox="0 0 200 200"><path fill="#b8b4ae" d="M100 60a40 40 0 1 0 0 80 40 40 0 0 0 0-80zm0 16a24 24 0 1 1 0 48 24 24 0 0 1 0-24zM92 10h16v24H92zm0 156h16v24H92zM10 92v16h24V92zm156 0v16h24V92zM34.3 24.5l11.3 11.3-17 17-11.3-11.3zm120 120l11.3 11.3-17 17-11.3-11.3zM24.5 165.7l17-17 11.3 11.3-17 17zm120-120l17-17 11.3 11.3-17 17z"/></svg>
+
+<div class="hub-logo">
+  <img src="logo.png" alt="ForgeIntellAI">
+  <div class="hub-name">ForgeIntellAI Hub</div>
+  <div class="hub-sub">Secure Client Portal</div>
+</div>
+
+<div class="login-box">
+  <div class="login-title">Enter your room key</div>
+  <div class="key-input-wrap">
+    <input class="key-input" type="password" id="key-input" placeholder="••••••••••••••" autocomplete="off">
+    <button class="key-toggle" onclick="toggleVis()" id="vis-btn">👁</button>
+  </div>
+  <button class="enter-btn" onclick="enterRoom()">→ Enter Room</button>
+  <div class="error-msg" id="err">Invalid room key. Please check your key and try again.</div>
+  <div class="hint">Your room key was provided by ForgeIntellAI.<br>Contact us if you need access assistance.</div>
+</div>
+
+<script>
+// ── ROOM KEYS ──
+// Each key maps to a room ID
+const ROOMS = {
+  '$t0cks&G0lf':        'admin',
+  'APEX-2025-K7X9':     'apex-roofing',
+};
+
+function toggleVis() {
+  const inp = document.getElementById('key-input');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function enterRoom() {
+  const key = document.getElementById('key-input').value.trim();
+  const room = ROOMS[key];
+  if (!room) {
+    document.getElementById('err').classList.add('show');
+    document.getElementById('key-input').style.borderColor = '#ef4444';
+    return;
+  }
+  // Store session
+  sessionStorage.setItem('forge_room', room);
+  sessionStorage.setItem('forge_key', key);
+  // Redirect
+  if (room === 'admin') {
+    window.location.href = 'admin/index.html';
+  } else {
+    window.location.href = 'rooms/' + room + '/dashboard.html';
+  }
+}
+
+document.getElementById('key-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') enterRoom();
+  document.getElementById('err').classList.remove('show');
+  document.getElementById('key-input').style.borderColor = '';
+});
+</script>
+</body>
+</html>
